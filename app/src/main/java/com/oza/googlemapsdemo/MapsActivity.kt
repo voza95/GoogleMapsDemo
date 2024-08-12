@@ -11,16 +11,18 @@ import androidx.lifecycle.lifecycleScope
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.oza.googlemapsdemo.databinding.ActivityMapsBinding
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class MapsActivity : AppCompatActivity(), OnMapReadyCallback, MenuProvider {
+class MapsActivity : AppCompatActivity(), OnMapReadyCallback, MenuProvider, OnMarkerClickListener {
 
     private lateinit var mMap: GoogleMap
     private lateinit var binding: ActivityMapsBinding
@@ -44,7 +46,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, MenuProvider {
 
         // Add a marker in Sydney and move the camera
         val sydney = LatLng(-34.0, 151.0)
-        mMap.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
+        val sydneyMarker = mMap.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
+        sydneyMarker?.tag = "Restaurant"
+
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 15F))
         mMap.uiSettings.apply {
             isZoomControlsEnabled = true
@@ -73,6 +77,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, MenuProvider {
 
             })
         }*/
+        mMap.setOnMarkerClickListener(this)
         onMapClicked()
         onMapLongClicked()
     }
@@ -122,5 +127,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, MenuProvider {
             }
         }
         return true
+    }
+
+    override fun onMarkerClick(marker: Marker): Boolean {
+        Toast.makeText(this, "$marker", Toast.LENGTH_SHORT).show()
+        return false
     }
 }
