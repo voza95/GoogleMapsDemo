@@ -85,7 +85,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, MenuProvider {
 
     private fun onMapLongClicked() {
         mMap.setOnMapLongClickListener {
-            mMap.addMarker(MarkerOptions().position(it).title("New Marker"))
+            val newMarker = mMap.addMarker(MarkerOptions().position(it).title("New Marker"))
+            lifecycleScope.launch {
+                delay(4000L)
+                newMarker?.remove()
+            }
         }
     }
 
