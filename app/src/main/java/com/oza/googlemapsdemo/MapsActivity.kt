@@ -2,6 +2,7 @@ package com.oza.googlemapsdemo
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -12,6 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener
+import com.google.android.gms.maps.GoogleMap.OnMarkerDragListener
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.CameraPosition
@@ -22,7 +24,7 @@ import com.oza.googlemapsdemo.databinding.ActivityMapsBinding
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
+class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnMarkerDragListener {
 
     private lateinit var mMap: GoogleMap
     private lateinit var binding: ActivityMapsBinding
@@ -44,7 +46,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         // Add a marker in Sydney and move the camera
         val sydney = LatLng(-34.0, 151.0)
-        val sydneyMarker = mMap.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
+        val sydneyMarker = mMap.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney").draggable(true))
         sydneyMarker?.tag = "Restaurant"
 
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 15F))
@@ -75,8 +77,20 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
             })
         }*/
+        mMap.setOnMarkerDragListener(this)
 
+    }
 
+    override fun onMarkerDrag(p0: Marker) {
+        Log.d("MyCall", "Drag")
+    }
+
+    override fun onMarkerDragEnd(p0: Marker) {
+        Log.d("MyCall", "End")
+    }
+
+    override fun onMarkerDragStart(p0: Marker) {
+        Log.d("MyCall", "Start")
     }
 
 }
