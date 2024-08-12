@@ -53,7 +53,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, MenuProvider {
             isMyLocationButtonEnabled = true
         }
 
-        val losAngles: CameraPosition = CameraPosition.Builder()
+        /*val losAngles: CameraPosition = CameraPosition.Builder()
             .target(LatLng(34.052235, -118.243683))
             .zoom(17F)
             .bearing(100F)
@@ -72,6 +72,20 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, MenuProvider {
                 }
 
             })
+        }*/
+        onMapClicked()
+        onMapLongClicked()
+    }
+
+    private fun onMapClicked() {
+        mMap.setOnMapClickListener {
+            Toast.makeText(this, "${it.latitude} ${it.longitude}", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun onMapLongClicked() {
+        mMap.setOnMapLongClickListener {
+            mMap.addMarker(MarkerOptions().position(it).title("New Marker"))
         }
     }
 
