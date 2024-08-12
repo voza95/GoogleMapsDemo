@@ -22,7 +22,7 @@ import com.oza.googlemapsdemo.databinding.ActivityMapsBinding
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class MapsActivity : AppCompatActivity(), OnMapReadyCallback, MenuProvider, OnMarkerClickListener {
+class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var mMap: GoogleMap
     private lateinit var binding: ActivityMapsBinding
@@ -32,8 +32,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, MenuProvider, OnMa
 
         binding = ActivityMapsBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        addMenuProvider(this)
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
@@ -77,60 +75,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, MenuProvider, OnMa
 
             })
         }*/
-        mMap.setOnMarkerClickListener(this)
-        onMapClicked()
-        onMapLongClicked()
-    }
-
-    private fun onMapClicked() {
-        mMap.setOnMapClickListener {
-            Toast.makeText(this, "${it.latitude} ${it.longitude}", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    private fun onMapLongClicked() {
-        mMap.setOnMapLongClickListener {
-            val newMarker = mMap.addMarker(MarkerOptions().position(it).title("New Marker"))
-            lifecycleScope.launch {
-                delay(4000L)
-                newMarker?.remove()
-            }
-        }
-    }
 
 
-    override fun onDestroy() {
-        removeMenuProvider(this)
-        super.onDestroy()
     }
 
-    override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-        menuInflater.inflate(R.menu.map_type_menu, menu)
-    }
-
-    override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-        when(menuItem.itemId) {
-            R.id.normal_map -> {
-                mMap.mapType = GoogleMap.MAP_TYPE_NORMAL
-            }
-            R.id.hybrid_map -> {
-                mMap.mapType = GoogleMap.MAP_TYPE_HYBRID
-            }
-            R.id.satellite_map -> {
-                mMap.mapType = GoogleMap.MAP_TYPE_SATELLITE
-            }
-            R.id.terrain_map -> {
-                mMap.mapType = GoogleMap.MAP_TYPE_TERRAIN
-            }
-            R.id.none_map -> {
-                mMap.mapType = GoogleMap.MAP_TYPE_NONE
-            }
-        }
-        return true
-    }
-
-    override fun onMarkerClick(marker: Marker): Boolean {
-        Toast.makeText(this, "$marker", Toast.LENGTH_SHORT).show()
-        return false
-    }
 }
