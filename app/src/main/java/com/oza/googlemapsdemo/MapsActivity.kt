@@ -39,9 +39,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var binding: ActivityMapsBinding
 
     private val losAngeles = LatLng(34.052235, -118.243683)
-    private val newYork = LatLng(40.730610, -73.935242)
-    private val france = LatLng(48.736842497057594, 0.1415298459960326)
-    private val colombia = LatLng(5.8600760428333825, -75.092846909068)
+    private val shapes by lazy { Shapes() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,7 +59,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         // Add a marker in Sydney and move the camera
         mMap.addMarker(MarkerOptions().position(losAngeles).title("Los Angles").snippet("Some random text"))
 
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(losAngeles, 1F))
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(losAngeles, 10F))
         mMap.uiSettings.apply {
             isZoomControlsEnabled = true
 //            isZoomGesturesEnabled = truer
@@ -69,25 +67,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             isMyLocationButtonEnabled = true
         }
 
-        lifecycleScope.launch {
-            addPloyLine()
-        }
+        shapes.addPolygon(mMap)
+
     }
 
-    private suspend fun addPloyLine() {
-        val polyLine = mMap.addPolyline(
-            PolylineOptions().apply {
-                add(losAngeles, newYork, france)
-                width(5F)
-                color(Color.BLUE)
-                geodesic(true)
-            }
-        )
-        delay(8000L)
-        val newList = listOf<LatLng>(
-            losAngeles, france, colombia
-        )
-        polyLine.points = newList
-    }
 
 }
