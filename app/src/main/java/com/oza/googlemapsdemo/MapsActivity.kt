@@ -67,7 +67,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             isMyLocationButtonEnabled = true
         }
 
-        shapes.addPolygon(mMap)
+        shapes.addCircle(mMap)
 
     }
 

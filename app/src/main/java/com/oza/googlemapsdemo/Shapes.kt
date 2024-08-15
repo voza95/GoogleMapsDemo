@@ -2,6 +2,7 @@ package com.oza.googlemapsdemo
 
 import android.graphics.Color
 import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.model.CircleOptions
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.PolygonOptions
 import com.google.android.gms.maps.model.PolylineOptions
@@ -46,6 +47,17 @@ class Shapes {
                 add(hollywood, random, mountainHighResort, sizFlag)
                 fillColor(-0x2101)
                 addHole(listOf(p0, p1, p2, p3))
+            }
+        )
+    }
+
+    fun addCircle(map: GoogleMap) {
+        val circle = map.addCircle(
+            CircleOptions().apply {
+                center(losAngeles)
+                radius(5000.0)
+                fillColor(R.color.purple)
+                strokeColor(R.color.sky_blue)
             }
         )
     }
