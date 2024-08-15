@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.MenuProvider
 import androidx.lifecycle.lifecycleScope
+import com.google.android.gms.maps.CameraUpdate
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -30,7 +31,7 @@ import com.oza.googlemapsdemo.databinding.ActivityMapsBinding
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnMarkerDragListener {
+class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnMarkerDragListener, OnMarkerClickListener {
 
     private lateinit var mMap: GoogleMap
     private lateinit var binding: ActivityMapsBinding
@@ -52,7 +53,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnMarkerDragListen
 
         // Add a marker in Sydney and move the camera
         val sydney = LatLng(-34.0, 151.0)
-        val sydneyMarker = mMap.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney").draggable(true))
+        val sydneyMarker = mMap.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney").snippet("Some other random text").draggable(true))
         sydneyMarker?.tag = "Restaurant"
 
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 15F))
@@ -68,9 +69,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnMarkerDragListen
             MarkerOptions()
                 .position(losAngles)
                 .title("Marker in los angles")
+                .snippet("Some random text")
 //                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_android))
 //                .icon(BitmapDescriptorFactory.defaultMarker(114F))
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN))
                 .flat(true)// Stop the marker from moving on map orientation change
                 .zIndex(1F) // Push this marker on top if there is another marker
         )
@@ -95,7 +97,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnMarkerDragListen
             })
         }*/
         mMap.setOnMarkerDragListener(this)
-
+        mMap.setOnMarkerClickListener(this)
     }
 
     override fun onMarkerDrag(p0: Marker) {
@@ -125,6 +127,16 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnMarkerDragListen
         vectorDrawable.setTint(color)
         vectorDrawable.draw(canvas)
         return BitmapDescriptorFactory.fromBitmap(bitmap)
+    }
+
+    override fun onMarkerClick(marker: Marker): Boolean {
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(17F), 2000, null)
+        marker.showInfoWindow()
+        lifecycleScope.launch {
+            delay(5000L)
+            marker.hideInfoWindow()
+        }
+        return true
     }
 
 }
