@@ -1,5 +1,8 @@
 package com.oza.googlemapsdemo
 
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -7,6 +10,7 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.MenuProvider
 import androidx.lifecycle.lifecycleScope
 
@@ -16,6 +20,8 @@ import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener
 import com.google.android.gms.maps.GoogleMap.OnMarkerDragListener
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptor
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
@@ -57,6 +63,17 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnMarkerDragListen
             isMyLocationButtonEnabled = true
         }
 
+        val losAngles = LatLng(34.052235, -118.243683)
+        val losAnglesMarker = mMap.addMarker(
+            MarkerOptions()
+                .position(losAngles)
+                .title("Marker in los angles")
+//                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_android))
+//                .icon(BitmapDescriptorFactory.defaultMarker(114F))
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
+                .flat(true)// Stop the marker from moving on map orientation change
+                .zIndex(1F) // Push this marker on top if there is another marker
+        )
         /*val losAngles: CameraPosition = CameraPosition.Builder()
             .target(LatLng(34.052235, -118.243683))
             .zoom(17F)
@@ -91,6 +108,23 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnMarkerDragListen
 
     override fun onMarkerDragStart(p0: Marker) {
         Log.d("MyCall", "Start")
+    }
+
+    private fun fromVectorToBitmap(id: Int, color: Int): BitmapDescriptor {
+        val vectorDrawable: Drawable? = ResourcesCompat.getDrawable(resources, id, null)
+        if (vectorDrawable == null) {
+            return BitmapDescriptorFactory.defaultMarker()
+        }
+        val bitmap = Bitmap.createBitmap(
+            vectorDrawable.intrinsicWidth,
+            vectorDrawable.intrinsicHeight,
+            Bitmap.Config.ARGB_8888
+        )
+        val canvas = Canvas(bitmap)
+        vectorDrawable.setBounds(0, 0, canvas.width, canvas.height)
+        vectorDrawable.setTint(color)
+        vectorDrawable.draw(canvas)
+        return BitmapDescriptorFactory.fromBitmap(bitmap)
     }
 
 }
